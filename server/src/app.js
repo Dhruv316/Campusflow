@@ -45,8 +45,8 @@ app.use(
 
 // ── CORS ───────────────────────────────────────────────────────────────────
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:5173',
-  ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+  'http://localhost:5173',
+  'https://your-vercel-app.vercel.app'
 ];
 
 app.use(
