@@ -44,10 +44,11 @@ app.use(
 );
 
 // ── CORS ───────────────────────────────────────────────────────────────────
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://your-vercel-app.vercel.app'
-];
+// ── CORS ───────────────────────────────────────────────────────────────────
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 app.use(
   cors({
