@@ -35,47 +35,28 @@ app.use(compression());
 // ── Security headers ───────────────────────────────────────────────────────
 app.use(
   helmet({
-    // Vercel manages CSP for the frontend; disabling here prevents double-headers
-    contentSecurityPolicy:    false,
-    // Allow embedding in iframes (needed for some certificate preview flows)
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
 
-// ── CORS ───────────────────────────────────────────────────────────────────
-// ── CORS ───────────────────────────────────────────────────────────────────
+// ── ✅ FIXED CORS (NO allowedOrigins ANYWHERE) ──────────────────────────────
 app.use(cors({
   origin: true,
   credentials: true
 }));
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow curl, Postman, mobile
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS: Origin ${origin} not allowed`));
-    },
-    credentials:     true,
-    methods:         ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders:  ['Content-Type', 'Authorization', 'X-Request-ID'],
-    exposedHeaders:  ['X-Request-ID'],
-  })
-);
 
 // ── Body parsers ───────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ── Input sanitization ─────────────────────────────────────────────────────
-// Strips keys containing $ or . from req.body to prevent NoSQL-style injection
-// patterns that could bypass query logic (defensive even on PostgreSQL).
 const sanitizeObject = (obj) => {
   if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) return obj;
   const clean = {};
   for (const key of Object.keys(obj)) {
-    if (key.includes('$') || key.includes('.')) continue; // drop dangerous keys
+    if (key.includes('$') || key.includes('.')) continue;
     clean[key] = typeof obj[key] === 'object' ? sanitizeObject(obj[key]) : obj[key];
   }
   return clean;
@@ -102,20 +83,15 @@ if (process.env.NODE_ENV !== 'test') {
   );
 }
 
-// ── Health check (no rate limit, no auth) ─────────────────────────────────
+// ── Health check ───────────────────────────────────────────────────────────
 app.use('/api/v1/health', healthRoutes);
 
 // ── Rate limiting ──────────────────────────────────────────────────────────
-// General API limiter applied first (broadest scope)
 app.use('/api/v1', apiLimiter);
-
-// Stricter limiter for auth/refresh and certificate downloads
-app.use('/api/v1/auth/refresh',        strictLimiter);
-app.use('/api/v1/certificates',        strictLimiter);
-
-// Auth limiter for login / register
-app.use('/api/v1/auth/login',          authLimiter);
-app.use('/api/v1/auth/register',       authLimiter);
+app.use('/api/v1/auth/refresh', strictLimiter);
+app.use('/api/v1/certificates', strictLimiter);
+app.use('/api/v1/auth/login', authLimiter);
+app.use('/api/v1/auth/register', authLimiter);
 
 // ── API Routes ─────────────────────────────────────────────────────────────
 const API = '/api/v1';
