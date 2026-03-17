@@ -1,0 +1,205 @@
+// CampusFlow — Prisma Schema
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+enum EventCategory {
+  TECHNICAL
+  CULTURAL
+  SPORTS
+  WORKSHOP
+  SEMINAR
+  GUEST_LECTURE
+  CLUB
+  PLACEMENT
+  AWARD_CEREMONY
+  COMPETITION
+  OTHER
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WAITLISTED
+  ATTENDED
+  ABSENT
+}
+
+enum NotificationType {
+  EVENT_REMINDER
+  REGISTRATION_UPDATE
+  NEW_EVENT
+  ANNOUNCEMENT
+  CERTIFICATE_READY
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id         String  @id @default(uuid())
+  name       String
+  email      String  @unique
+  password   String
+  role       Role    @default(STUDENT)
+  rollNumber String? @unique
+  department String?
+  year       Int?
+  phone      String?
+  avatar     String?
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  createdEvents  Event[]          @relation("EventCreator")
+  registrations  Registration[]   @relation("StudentRegistrations")
+  certificates   Certificate[]    @relation("StudentCertificates")
+  notifications  Notification[]   @relation("UserNotifications")
+  refreshTokens  RefreshToken[]   @relation("UserRefreshTokens")
+
+  @@index([email])
+  @@index([role])
+  @@index([rollNumber])
+  @@map("users")
+}
+
+model Event {
+  id                    String        @id @default(uuid())
+  title                 String
+  description           String
+  category              EventCategory
+  status                EventStatus   @default(DRAFT)
+  venue                 String
+  bannerImage           String?
+  startDate             DateTime
+  endDate               DateTime
+  registrationDeadline  DateTime
+  maxCapacity           Int
+  currentRegistrations  Int           @default(0)
+  isTeamEvent           Boolean       @default(false)
+  teamMinSize           Int?
+  teamMaxSize           Int?
+  tags                  String[]
+
+  createdById String
+  createdBy   User   @relation("EventCreator", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  registrations Registration[] @relation("EventRegistrations")
+  certificates  Certificate[]  @relation("EventCertificates")
+
+  @@index([status])
+  @@index([category])
+  @@index([startDate])
+  @@index([createdById])
+  @@map("events")
+}
+
+model Registration {
+  id           String             @id @default(uuid())
+  status       RegistrationStatus @default(PENDING)
+  qrCode       String             @unique
+  qrCodeImage  String?            // base64 data URL of the QR code PNG
+  registeredAt DateTime           @default(now())
+  checkedInAt  DateTime?
+  teamName     String?
+  teamMembers  String[]
+  feedback     String?
+  rating       Int?
+  updatedAt    DateTime           @updatedAt
+
+  studentId String
+  student   User   @relation("StudentRegistrations", fields: [studentId], references: [id])
+
+  eventId String
+  event   Event  @relation("EventRegistrations", fields: [eventId], references: [id])
+
+  // Relations
+  certificate Certificate? @relation("RegistrationCertificate")
+
+  @@unique([studentId, eventId])
+  @@index([studentId])
+  @@index([eventId])
+  @@index([status])
+  @@index([qrCode])
+  @@map("registrations")
+}
+
+model Certificate {
+  id                String   @id @default(uuid())
+  certificateNumber String   @unique
+  issuedAt          DateTime @default(now())
+  downloadUrl       String?
+
+  registrationId String       @unique
+  registration   Registration @relation("RegistrationCertificate", fields: [registrationId], references: [id])
+
+  studentId String
+  student   User   @relation("StudentCertificates", fields: [studentId], references: [id])
+
+  eventId String
+  event   Event  @relation("EventCertificates", fields: [eventId], references: [id])
+
+  @@index([studentId])
+  @@index([eventId])
+  @@index([certificateNumber])
+  @@map("certificates")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  userId String
+  user   User   @relation("UserNotifications", fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation("UserRefreshTokens", fields: [userId], references: [id])
+
+  @@index([token])
+  @@index([userId])
+  @@map("refresh_tokens")
+}

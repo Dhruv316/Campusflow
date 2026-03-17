@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bangers&family=Press+Start+2P&family=Inter:wght@400;500;600;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    background-color: #0D0D0D;
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    cursor: none;
+  }
+  ::selection { background-color: #AAFF00; color: #0D0D0D; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0D0D0D; }
+  ::-webkit-scrollbar-thumb { background: #4A1080; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #AAFF00; }
+}
+
+/* ── CUSTOM CURSOR ─────────────────────────────────────────────────────────── */
+.custom-cursor {
+  width: 20px; height: 20px; background: #AAFF00; border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 99999;
+  mix-blend-mode: difference; transform: translate(-50%, -50%);
+  transition: width 0.15s, height 0.15s;
+}
+.custom-cursor.hovering { width: 48px; height: 48px; }
+
+/* ── FONT HELPERS ──────────────────────────────────────────────────────────── */
+.font-display  { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
+.font-arcade   { font-family: 'Bangers', sans-serif; letter-spacing: 3px; }
+.font-pixel    { font-family: 'Press Start 2P', monospace; }
+.text-display  { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
+
+/* ── 3D COMIC TEXT (Image 5 & 6 style) ────────────────────────────────────── */
+.text-3d-lime {
+  color: #AAFF00;
+  -webkit-text-stroke: 3px #1a4000;
+  text-shadow:
+    3px 3px 0 #1a4000,
+    6px 6px 0 rgba(0,0,0,0.4),
+    0 0 30px #AAFF0066;
+}
+.text-3d-pink {
+  color: #FF3CAC;
+  -webkit-text-stroke: 3px #6b0044;
+  text-shadow:
+    3px 3px 0 #6b0044,
+    6px 6px 0 rgba(0,0,0,0.4),
+    0 0 30px #FF3CAC66;
+}
+.text-3d-orange {
+  color: #FF8C00;
+  -webkit-text-stroke: 3px #7a3a00;
+  text-shadow:
+    3px 3px 0 #7a3a00,
+    6px 6px 0 rgba(0,0,0,0.5),
+    0 0 20px #FF8C0066;
+}
+.text-3d-yellow {
+  color: #F5E642;
+  -webkit-text-stroke: 3px #6b5a00;
+  text-shadow:
+    3px 3px 0 #6b5a00,
+    6px 6px 0 rgba(0,0,0,0.4),
+    0 0 25px #F5E64266;
+}
+.text-3d-white {
+  color: #FFFFFF;
+  -webkit-text-stroke: 3px #333;
+  text-shadow:
+    3px 3px 0 #222,
+    6px 6px 0 rgba(0,0,0,0.5);
+}
+.text-3d-red {
+  color: #FF4444;
+  -webkit-text-stroke: 3px #800000;
+  text-shadow:
+    3px 3px 0 #800000,
+    6px 6px 0 rgba(0,0,0,0.4),
+    0 0 20px #FF444466;
+}
+
+/* ── NEON GLOW TEXT ────────────────────────────────────────────────────────── */
+.text-neon-lime {
+  color: #AAFF00;
+  text-shadow: 0 0 7px #AAFF00, 0 0 14px #AAFF00, 0 0 28px #AAFF0088, 0 0 56px #AAFF0044;
+}
+.text-neon-pink {
+  color: #FF3CAC;
+  text-shadow: 0 0 7px #FF3CAC, 0 0 14px #FF3CAC, 0 0 28px #FF3CAC88;
+}
+.text-neon-yellow {
+  color: #F5E642;
+  text-shadow: 0 0 7px #F5E642, 0 0 14px #F5E642, 0 0 28px #F5E64288;
+}
+.text-neon-cyan {
+  color: #00E5FF;
+  text-shadow: 0 0 7px #00E5FF, 0 0 14px #00E5FF, 0 0 28px #00E5FF88;
+}
+
+/* ── LED SCOREBOARD TEXT (Image 3 style) ───────────────────────────────────── */
+.text-led {
+  font-family: 'Press Start 2P', monospace;
+  color: #F5E642;
+  text-shadow:
+    0 0 4px #F5E642,
+    0 0 8px #F5E642,
+    0 0 16px #F5E64288,
+    0 0 32px #F5E64244;
+  letter-spacing: 4px;
+}
+.text-led-green {
+  font-family: 'Press Start 2P', monospace;
+  color: #AAFF00;
+  text-shadow: 0 0 4px #AAFF00, 0 0 8px #AAFF00, 0 0 16px #AAFF0088;
+  letter-spacing: 4px;
+}
+
+/* ── NEON VEGAS BUTTON (Image 2 style) ─────────────────────────────────────── */
+.btn-vegas {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 40px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: #F5E642;
+  background: #0a0a1a;
+  border: 2px solid #FF3CAC;
+  border-radius: 6px;
+  cursor: none;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  box-shadow:
+    0 0 8px #FF3CAC,
+    0 0 16px #FF3CAC88,
+    inset 0 0 8px rgba(255,60,172,0.1),
+    0 0 4px #F5E642 inset;
+  outline: 2px solid #F5E642;
+  outline-offset: 3px;
+}
+.btn-vegas:hover {
+  color: #FFFFFF;
+  box-shadow:
+    0 0 16px #FF3CAC,
+    0 0 32px #FF3CAC88,
+    0 0 48px #FF3CAC44,
+    inset 0 0 16px rgba(255,60,172,0.2),
+    0 0 8px #F5E642 inset;
+  transform: scale(1.03);
+}
+.btn-vegas-lime {
+  color: #AAFF00;
+  border-color: #AAFF00;
+  outline-color: #2D5400;
+  box-shadow: 0 0 8px #AAFF00, 0 0 16px #AAFF0088, inset 0 0 8px rgba(170,255,0,0.1);
+}
+.btn-vegas-lime:hover {
+  box-shadow: 0 0 16px #AAFF00, 0 0 32px #AAFF0088, 0 0 48px #AAFF0044, inset 0 0 16px rgba(170,255,0,0.2);
+  color: #FFFFFF;
+}
+.btn-vegas-cyan {
+  color: #00E5FF;
+  border-color: #00E5FF;
+  outline-color: #006688;
+  box-shadow: 0 0 8px #00E5FF, 0 0 16px #00E5FF88, inset 0 0 8px rgba(0,229,255,0.1);
+}
+
+/* ── MARQUEE SIGN CARD (Image 1 style) ─────────────────────────────────────── */
+.card-marquee {
+  position: relative;
+  background: rgba(0,0,0,0.7);
+  border: 2px solid #AAFF00;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow:
+    0 0 10px #AAFF0044,
+    0 0 20px #AAFF0022,
+    inset 0 0 15px rgba(170,255,0,0.05);
+  overflow: hidden;
+  transition: all 0.25s;
+}
+.card-marquee::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(170,255,0,0.2);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.card-marquee:hover {
+  box-shadow:
+    0 0 20px #AAFF0066,
+    0 0 40px #AAFF0033,
+    inset 0 0 20px rgba(170,255,0,0.08);
+  border-color: #AAFF00;
+  transform: translateY(-3px);
+}
+.card-marquee-pink {
+  border-color: #FF3CAC;
+  box-shadow: 0 0 10px #FF3CAC44, 0 0 20px #FF3CAC22, inset 0 0 15px rgba(255,60,172,0.05);
+}
+.card-marquee-pink::before { border-color: rgba(255,60,172,0.2); }
+.card-marquee-pink:hover { box-shadow: 0 0 20px #FF3CAC66, 0 0 40px #FF3CAC33, inset 0 0 20px rgba(255,60,172,0.08); }
+
+.card-marquee-cyan {
+  border-color: #00E5FF;
+  box-shadow: 0 0 10px #00E5FF44, inset 0 0 15px rgba(0,229,255,0.05);
+}
+.card-marquee-cyan::before { border-color: rgba(0,229,255,0.2); }
+.card-marquee-cyan:hover { box-shadow: 0 0 20px #00E5FF66, 0 0 40px #00E5FF33, inset 0 0 20px rgba(0,229,255,0.08); border-color: #00E5FF; }
+
+.card-marquee-yellow {
+  border-color: #F5E642;
+  box-shadow: 0 0 10px #F5E64244, inset 0 0 15px rgba(245,230,66,0.05);
+}
+.card-marquee-yellow::before { border-color: rgba(245,230,66,0.2); }
+.card-marquee-yellow:hover { box-shadow: 0 0 20px #F5E64266, 0 0 40px #F5E64233, inset 0 0 20px rgba(245,230,66,0.08); border-color: #F5E642; }
+
+/* ── DOTTED LIGHTS BORDER ──────────────────────────────────────────────────── */
+.dotted-lights {
+  position: relative;
+}
+.dotted-lights::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background-image:
+    radial-gradient(circle, #F5E642 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+  background-position: 0 0;
+  pointer-events: none;
+  animation: lightsScroll 1s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.dotted-lights:hover::after { opacity: 1; }
+@keyframes lightsScroll {
+  0%   { background-position: 0 0; }
+  100% { background-position: 24px 0; }
+}
+
+/* ── VINTAGE SIGN SHAPE ────────────────────────────────────────────────────── */
+.sign-vintage {
+  background: linear-gradient(135deg, #1a2a1a, #0d1a0d);
+  border: 3px solid #8B7A2A;
+  border-radius: 50px 50px 50px 50px / 30px 30px 30px 30px;
+  box-shadow:
+    0 0 0 1px #F5E64244,
+    0 0 20px #F5E64222,
+    inset 0 2px 0 rgba(245,230,66,0.2),
+    4px 4px 0 #0a1a0a;
+}
+
+/* ── NEON FLICKER ANIMATION ────────────────────────────────────────────────── */
+@keyframes neonFlicker {
+  0%,18%,20%,50%,52%,100% { opacity: 1; }
+  19%,51% { opacity: 0.6; }
+}
+@keyframes neonPulse {
+  0%,100% { text-shadow: 0 0 7px #AAFF00, 0 0 14px #AAFF00, 0 0 28px #AAFF0088; }
+  50%      { text-shadow: 0 0 4px #AAFF00, 0 0 8px #AAFF00, 0 0 16px #AAFF0066; }
+}
+@keyframes signGlow {
+  0%,100% { box-shadow: 0 0 10px #AAFF0066, 0 0 20px #AAFF0033; }
+  50%      { box-shadow: 0 0 20px #AAFF00aa, 0 0 40px #AAFF0066; }
+}
+@keyframes electricFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+@keyframes ledBlink {
+  0%,49% { opacity: 1; }
+  50%,100% { opacity: 0.7; }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+.animate-neon-flicker { animation: neonFlicker 4s infinite; }
+.animate-neon-pulse   { animation: neonPulse 2s ease-in-out infinite; }
+.animate-sign-glow    { animation: signGlow 3s ease-in-out infinite; }
+.animate-float        { animation: float 3s ease-in-out infinite; }
+.animate-led-blink    { animation: ledBlink 1s step-end infinite; }
+
+/* ── GRAIN TEXTURE ─────────────────────────────────────────────────────────── */
+.grain-bg { position: relative; }
+.grain-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+.grain-bg > * { position: relative; z-index: 1; }
+
+/* ── RIPPLE ────────────────────────────────────────────────────────────────── */
+.ripple-container { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(170,255,0,0.3);
+  transform: scale(0);
+  animation: rippleAnim 0.6s linear;
+  pointer-events: none;
+}
+
+/* ── SKELETON ──────────────────────────────────────────────────────────────── */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #1E0A3C 0%, #2D1050 50%, #1E0A3C 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Print */
+.print-only { display: none; }
+@media print {
+  .print-only { display: block !important; }
+  body { background: white !important; color: black !important; cursor: auto !important; }
+}
